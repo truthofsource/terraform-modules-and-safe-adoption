@@ -1,6 +1,6 @@
 # Reusable Terraform Modules and Safe Infrastructure Adoption
 
-**Reuse the infrastructure pattern without replacing the resources that already run the business.**
+**Reuse cloud setup patterns without accidentally replacing the resources already in use.**
 
 [Business problem](#the-business-problem) · [Solution](#the-solution) · [Strengths](#engineering-strengths) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
 
@@ -8,13 +8,13 @@
 
 ## The Business Problem
 
-Production and nonproduction definitions had repeated network/storage patterns. Moving them into reusable modules needed to preserve names, resource IDs, access controls and state ownership while unrelated drift remained visible.
+Production and testing used many of the same network and storage patterns. Moving those definitions into shared code could make maintenance easier, but it had to preserve existing resources, permissions and ownership. Unrelated configuration differences also needed to stay separate from that work.
 
 ## The Solution
 
-Extract explicit module inputs/outputs, compose the same modules with distinct environment values, retain reviewed address-move declarations and compare plans against a baseline. Validate the public reference with mocked providers rather than applying it.
+Put the repeated patterns into Terraform modules, which are reusable groups of resource definitions. Give each environment its own names and settings. Map old resource addresses to the new module addresses and review the proposed changes before any real state update.
 
-**Business outcome:** The actual adoption work kept existing resource identities and separated module-address changes from preexisting worker drift. The public example demonstrates two environments using the actual network/storage modules without reading or changing live state.
+**Business outcome:** The actual adoption work preserved resource identities and kept unrelated background-job differences separate. This public example demonstrates reuse without reading or changing live state.
 
 ## Engineering Strengths
 
@@ -61,13 +61,13 @@ terraform -chdir=infra validate
 terraform -chdir=infra test
 ```
 
-**Observed:** Four Python reference checks and two Terraform mock cases passed. The mock composition keeps production/nonproduction instances distinct. [Validation](docs/VALIDATION.md) records the exact scope and distinguishes pure/mock checks from hosted integration.
+**Observed:** Four Python reference checks and two Terraform cases using simulated responses passed. The mock composition keeps production/nonproduction instances distinct. [Validation](docs/VALIDATION.md) records the exact scope and distinguishes pure/mock checks from testing with the hosted services.
 
 ### 2. Inspect the decision output
 
 ![Working reference example](docs/images/02-example.png)
 
-The output is explicitly fictional and exercises the included logic. A successful rule/mock result is not a completed real-world operation. The public two-environment composition is a reference. Real environments retain their own roots/state and commissioned inputs; no live state or cloud resource was accessed.
+The output is explicitly fictional and exercises the included logic. A successful rule test or simulation is not a completed real-world operation. The public two-environment composition is a reference. Real environments retain their own roots/state and commissioned inputs; no live state or cloud resource was accessed.
 
 ### 3. Open the reference viewer
 
@@ -92,7 +92,7 @@ The same module definition does not mean production and nonproduction should sha
 
 ## Operations, Limits and Growth
 
-Keep the target, owning state/identity and evidence boundary explicit. Validate expected failures as well as success; do not let an incomplete result become a green indicator. Preserve private inputs and unrelated changes. Proposed scaling needs measured bottlenecks, cost review, downstream limits and repeated denied/recovery checks. [Operations and scaling](docs/OPERATIONS-AND-SCALING.md).
+State clearly which system is being checked, who owns it and what the result actually proves. Test the cases that should be denied or rejected as well as the successful ones. Keep incomplete results clearly marked. Preserve private inputs and unrelated changes. Before expanding the design, measure what is slow or limited, review costs, and check access restrictions and recovery again. [Operations and scaling](docs/OPERATIONS-AND-SCALING.md).
 
 ## Project Guides
 
