@@ -1,0 +1,26 @@
+{
+  "slug": "terraform-modules-and-safe-adoption",
+  "title": "Reusable Terraform Modules and Safe Infrastructure Adoption",
+  "tagline": "Reuse the infrastructure pattern without replacing the resources that already run the business.",
+  "problem": "Production and nonproduction definitions had repeated network/storage patterns. Moving them into reusable modules needed to preserve names, resource IDs, access controls and state ownership while unrelated drift remained visible.",
+  "solution": "Extract explicit module inputs/outputs, compose the same modules with distinct environment values, retain reviewed address-move declarations and compare plans against a baseline. Validate the public reference with mocked providers rather than applying it.",
+  "outcome": "The actual adoption work kept existing resource identities and separated module-address changes from preexisting worker drift. The public example demonstrates two environments using the actual network/storage modules without reading or changing live state.",
+  "strengths": [
+    [
+      "Consistent controls",
+      "The same module supplies network delegation, storage privacy and diagnostic patterns across selected environments."
+    ],
+    [
+      "Explicit contracts",
+      "Inputs identify names, ranges, groups and destinations; outputs connect consumers without copying resource internals."
+    ],
+    [
+      "Safer refactoring",
+      "Reviewed address mapping and moved declarations help preserve resource identity when code layout changes."
+    ]
+  ],
+  "code": "infra/main.tf",
+  "tests": "Four Python reference checks and two Terraform mock cases passed. The mock composition keeps production/nonproduction instances distinct.",
+  "limit": "The public two-environment composition is a reference. Real environments retain their own roots/state and commissioned inputs; no live state or cloud resource was accessed.",
+  "diagram": "Inputs[Environment inputs / tags / identities] --> Root[Owning root and provider]\n  Root --> NP[Nonproduction module instances]\n  Root --> Prod[Production module instances]\n  NP --> Modules[Actual network / storage modules]\n  Prod --> Modules\n  Moves[Reviewed moved-address map] --> Adoption[Existing resource identity preserved]\n  Tests[Mocks / plan comparison] --> Adoption"
+}

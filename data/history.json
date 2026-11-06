@@ -1,0 +1,7 @@
+{
+  "evidenceType": "Recorded source adoption context",
+  "portalResourcesMoved": 2,
+  "resourceIdComparison": "Earlier reviewed candidate preserved existing Azure IDs",
+  "separateDrift": "Preexisting worker drift was kept separate from module refactor",
+  "warning": "No current state read, refresh or migration performed for this project"
+}

@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-06",
+  "files": [
+    {
+      "source": "infra/modules/network/main.tf",
+      "sourceSha256": "7685668e57335db6a3e4d0bde1ab81989d618999c777b97067896115b24e0732",
+      "publicFile": "infra/modules/network/main.tf"
+    },
+    {
+      "source": "infra/modules/network/variables.tf",
+      "sourceSha256": "e3ccc841347fb8f9143b95e3b9445e750f8536e9465fa627d6dbedc2d9bd0189",
+      "publicFile": "infra/modules/network/variables.tf"
+    },
+    {
+      "source": "infra/modules/network/outputs.tf",
+      "sourceSha256": "10d55e366cf00c78f89c8e5b3e49ae59e54ce2930ad3594e95de966edfe943cb",
+      "publicFile": "infra/modules/network/outputs.tf"
+    },
+    {
+      "source": "infra/modules/network/versions.tf",
+      "sourceSha256": "b88fcfef92a8571378d3376a6d7e2b7478df1fcaaecfcf56b8ec5e2c831a6118",
+      "publicFile": "infra/modules/network/versions.tf"
+    },
+    {
+      "source": "infra/modules/storage/main.tf",
+      "sourceSha256": "d0945df67f544836bc5c9d6abcea6388be7de1f252cafe09c36b826eeaf2b78f",
+      "publicFile": "infra/modules/storage/main.tf"
+    },
+    {
+      "source": "infra/modules/storage/variables.tf",
+      "sourceSha256": "52d1dddacadab3aa3d18f83e00787198fb8bbf5349344e7972d435ffbaf9f4e4",
+      "publicFile": "infra/modules/storage/variables.tf"
+    },
+    {
+      "source": "infra/modules/storage/outputs.tf",
+      "sourceSha256": "33730afd3993b2dc8c66b7dd56a63d370aa916e5f37ef5b240b147ffa6efab4c",
+      "publicFile": "infra/modules/storage/outputs.tf"
+    },
+    {
+      "source": "infra/modules/storage/versions.tf",
+      "sourceSha256": "b88fcfef92a8571378d3376a6d7e2b7478df1fcaaecfcf56b8ec5e2c831a6118",
+      "publicFile": "infra/modules/storage/versions.tf"
+    },
+    {
+      "source": "infra/platform/production/moved.tf",
+      "sourceSha256": "a51666e412fb6a7e8ce976b6d54543cd915d557231b664d4dd1d880acf3cd2c9",
+      "publicFile": "reference/adoption/moved.tf"
+    },
+    {
+      "source": "infra/refactors/production.json",
+      "sourceSha256": "799907449659ec43eb1c34feb5bd4c9ca8c34070220a9152809e149c8bb9eb6f",
+      "publicFile": "reference/adoption/address-map.json"
+    },
+    {
+      "source": "infra/platform/production/network.tf",
+      "sourceSha256": "e89cb19579146fd6dff310002c816706e53e4fee69bba0984e3729868874c5c8",
+      "publicFile": "reference/production-network.tf"
+    },
+    {
+      "source": "infra/platform/nonproduction/network-module.tf",
+      "sourceSha256": "eb64c7233e874a5a45989c4e6a75cd6926b3e244ab850fcfae9b35f01a308b03",
+      "publicFile": "reference/nonproduction-network.tf"
+    }
+  ],
+  "publicAdaptations": [
+    "Example labels",
+    "New offline viewer/demonstration",
+    "See source-map guide for extracted rule and wrapper boundaries"
+  ]
+}
