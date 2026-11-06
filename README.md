@@ -20,9 +20,9 @@ Put the repeated patterns into Terraform modules, which are reusable groups of r
 
 | Strength | Practical value |
 | --- | --- |
-| **Consistent controls** | The same module supplies network delegation, storage privacy and diagnostic patterns across selected environments. |
-| **Explicit contracts** | Inputs identify names, ranges, groups and destinations; outputs connect consumers without copying resource internals. |
-| **Safer refactoring** | Reviewed address mapping and moved declarations help preserve resource identity when code layout changes. |
+| **Consistent controls** | Reuse the same network, private-storage and logging patterns across the selected environments. |
+| **Explicit contracts** | Pass in the names, address ranges, groups and destinations each environment needs. Return useful results so other code can use them. |
+| **Safer refactoring** | Record where each resource moves in the code so the existing cloud resource can be kept. |
 
 ## Architecture
 
@@ -48,7 +48,7 @@ This project is derived from actual workforce-platform implementation. Identifyi
 | Two-environment public root | Reuse with different names/ranges under a default-Off wrapper | [Root](infra/main.tf) |
 | Actual adoption references | Original address mapping and retained moved declarations | [Reference](reference/adoption/) |
 | Local demonstration | Exercise actual rule/evaluation code using fictional data | [Demo](scripts/demo.py) |
-| Dated context | Keep recorded implementation separate from new local evidence | [Context](data/history.json) |
+| Dated context | Keep earlier platform results separate from the new local example | [Context](data/history.json) |
 
 ## Proof It Works
 
@@ -102,6 +102,6 @@ State clearly which system is being checked, who owns it and what the result act
 | [Commands](docs/COMMANDS.md) | Local tests, expected output and inspection |
 | [Operations and scaling](docs/OPERATIONS-AND-SCALING.md) | Strengths, weaknesses, costs and growth |
 | [Source map](docs/SOURCE-MAP.md) | Actual files and public adaptations |
-| [Validation](docs/VALIDATION.md) | Observed local evidence and remaining integration scope |
+| [Validation](docs/VALIDATION.md) | What was tested locally and what still needs real-service testing |
 
 No Azure service, business record or live state was changed. The public validation workflow is manual-only and was not dispatched, conserving hosted Actions minutes.
