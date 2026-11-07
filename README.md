@@ -106,6 +106,10 @@ The same module definition does not mean production and nonproduction should sha
 
 State clearly which system is being checked, who owns it and what the result actually proves. Test the cases that should be denied or rejected as well as the successful ones. Keep incomplete results clearly marked. Preserve private inputs and unrelated changes. Before expanding the design, measure what is slow or limited, review costs, and check access restrictions and recovery again. [Operations and scaling](docs/OPERATIONS-AND-SCALING.md).
 
+## Troubleshooting Lessons
+
+An apply could fail after creating resources. The recovery used achieved state and a fresh plan, while later settings work showed why exact runtime readback also matters. [Read the incident, evidence and verification](docs/LESSONS-LEARNED.md).
+
 ## Project Guides
 
 | Guide | Purpose |
