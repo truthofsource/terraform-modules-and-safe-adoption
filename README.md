@@ -2,7 +2,7 @@
 
 **Reuse cloud setup patterns without accidentally replacing the resources already in use.**
 
-[Business problem](#the-business-problem) · [Solution](#the-solution) · [Strengths](#engineering-strengths) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
+[Business problem](#the-business-problem) · [Solution](#the-solution) · [Strengths](#engineering-strengths) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md) · [Step by step](#step-by-step)
 
 ![Local implementation reference](docs/images/01-overview.png)
 
@@ -15,6 +15,18 @@ Production and testing used many of the same network and storage patterns. Movin
 Put the repeated patterns into Terraform modules, which are reusable groups of resource definitions. Give each environment its own names and settings. Map old resource addresses to the new module addresses and review the proposed changes before any real state update.
 
 **Business outcome:** The actual adoption work preserved resource identities and kept unrelated background-job differences separate. This public example demonstrates reuse without reading or changing live state.
+
+## Step by Step
+
+A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
+
+1. **Find the repeated setup pattern** — Identify infrastructure that uses the same structure across environments. Put that structure into a reusable Terraform module with explicit inputs.
+
+2. **Keep environment choices separate** — Supply the names, address ranges and access settings for each environment. Sharing a module does not mean sharing every resource or permission.
+
+3. **Map existing resources carefully** — Record how old resource addresses correspond to the new module addresses. Review the proposed plan for unintended replacements or unrelated changes.
+
+4. **Validate before a live migration** — Run the local examples and simulated infrastructure checks. This public project does not read or change the live infrastructure state.
 
 ## Engineering Strengths
 
