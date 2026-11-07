@@ -16,6 +16,19 @@ Put the repeated patterns into Terraform modules, which are reusable groups of r
 
 **Business outcome:** The actual adoption work preserved resource identities and kept unrelated background-job differences separate. This public example demonstrates reuse without reading or changing live state.
 
+## Tools Used and What They Do
+
+| Tool or service | What it does | Where it fits |
+| --- | --- | --- |
+| Terraform modules, moved blocks and state | Reuse configuration while retaining ownership of existing resource IDs. | Actual adoption pattern; a state move is not a resource copy or Azure rename. |
+| AzureRM and AzureAD providers | Translate reviewed resource/identity declarations into the appropriate service operations. | Provider source/lock choices remain part of the reviewed environment. |
+| terraform fmt, validate, test and plan | Check formatting, configuration, mock expectations and proposed changes. | Different checks; a mock test or clean plan does not establish functional connectivity. |
+| Azure CLI | Read the actual target resource when plan/state evidence needs comparison. | Operating utility; not permission to apply an unrelated change. |
+| Python | Run the local module-adoption illustration. | Public reference model, not the authoritative Azure/Terraform state. |
+| GitHub Actions | Coordinate reference validation. | Manual-only public workflow; no cloud adoption is applied. |
+
+Keep actual source-to-module moves separate from the public teaching root. Preserve state backups, exact IDs and independent post-change checks before claiming a successful adoption.
+
 ## Step by Step
 
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
@@ -24,9 +37,9 @@ A short walkthrough of the process, with technical instructions and evidence lim
 
 2. **Keep environment choices separate** — Supply the names, address ranges and access settings for each environment. Sharing a module does not mean sharing every resource or permission.
 
-3. **Map existing resources carefully** — Record how old resource addresses correspond to the new module addresses. Review the proposed plan for unintended replacements or unrelated changes.
+3. **Map existing resources carefully (Terraform moved blocks)** — Record how old resource addresses correspond to the new module addresses. Review the proposed plan for unintended replacements or unrelated changes.
 
-4. **Validate before a live migration** — Run the local examples and simulated infrastructure checks. This public project does not read or change the live infrastructure state.
+4. **Validate before a live migration (Terraform checks)** — Run the local examples and simulated infrastructure checks. This public project does not read or change the live infrastructure state.
 
 ## Engineering Strengths
 
