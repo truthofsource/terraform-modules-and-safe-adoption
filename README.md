@@ -8,7 +8,11 @@
 
 ## The Business Problem
 
-Production and testing used many of the same network and storage patterns. Moving those definitions into shared code could make maintenance easier, but it had to preserve existing resources, permissions and ownership. Unrelated configuration differences also needed to stay separate from that work.
+Production and testing repeat many of the same network, storage and application-hosting patterns. Maintaining separate copies means an improvement can reach one environment while another keeps an older setting. As the platform grows, engineers spend more time comparing similar definitions and deciding which differences are intentional.
+
+Consolidating those definitions introduces a different risk: the existing resources already hold records, permissions and service connections. A code cleanup that Terraform interprets as replacement could interrupt a live service or put retained data at risk. Unrelated configuration drift can make that review harder.
+
+The business need was to reduce repeated maintenance while preserving the identity and ownership of existing resources, with a proposed-change review that separates harmless code reorganization from real infrastructure changes.
 
 ## The Solution
 
