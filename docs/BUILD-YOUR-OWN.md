@@ -1,114 +1,196 @@
-# Build your own: Reusable Terraform Modules and Safe Infrastructure Adoption
+# Build your own from scratch: Terraform Modules And Safe Adoption
 
-This is a step-by-step build guide for an independent learning copy. Follow the numbered steps in order and record your own results. The included local implementation is not a complete deployment of the private business platform; cloud extensions are separate and must use your own authorized resources.
+Your own reusable Azure network module and a root configuration that calls it.
 
-## What you will create
+Start with a new folder, your own files and your own accounts. The numbered steps below describe the build; no portfolio repository checkout is required. The existing implementation/evidence elsewhere in this repository is a separate reference, not a claim that your new build has already passed.
 
-A module composition and mocked plan review, not a live state migration.
+## Prerequisites
 
-## Prerequisites and working locations
+Terraform, Azure CLI and a dedicated lab subscription scope. Existing production state is not an input to this new-build tutorial.
 
-| Location | What you need |
-| --- | --- |
-| Your workstation | Git and the runtime versions documented in [the command guide](COMMANDS.md); use its package/lockfile instructions. |
-| Bash, Linux or WSL terminal | The commands below use Bash syntax. Prepare Python 3.12; use the project's pinned dependency files. |
-| PowerShell alternative | Use the PowerShell forms in the command guide, or run this Bash recipe in WSL; do not paste Bash loops into PowerShell. |
-| Azure or external service | Not needed for default local tests. Any cloud extension requires your own account, target, permissions, budget and acceptance plan. |
+Use Bash on Linux/macOS/WSL for Bash blocks and PowerShell for PowerShell blocks. Select the tool versions supported by the official sources below, record the versions you actually install and retain generated dependency locks. Cloud resources, scanner downloads, logs and external AI calls can create costs; review the stated scope before enabling them.
 
-Read [the existing validation scope](VALIDATION.md) before running anything. A recorded historical test result is not evidence that your new copy has passed.
+## Create your project folder
 
-## Step 1: Create your own workspace
-
-**Where:** your workstation, in a new project folder.
-
-1. Clone the public source below into a new directory; keep the source attribution and included license terms. This creates your local learning copy, not cloud resources.
-2. Record the selected commit and tool versions before editing. If you later publish a fork, review any origin, hash or target bindings rather than disabling guards to make the fork pass.
+Choose a new folder name. These first commands create a blank project; an optional `git init` gives it its own history. Create parent directories in your editor when a later step introduces a nested file.
 
 ```bash
-git clone https://github.com/truthofsource/terraform-modules-and-safe-adoption.git
-cd terraform-modules-and-safe-adoption
-git rev-parse HEAD
-git rev-parse --show-toplevel
-git status --short
+mkdir my-terraform-modules-and-safe-adoption
+cd my-terraform-modules-and-safe-adoption
+git init
 ```
 
-**Expected result:** the project files are present and you can identify the starting source. Continue from this repository root unless a command explicitly changes directory.
+Create `.gitignore` before saving credentials or build outputs:
 
-## Step 2: Prepare dependencies and build the local baseline
+```gitignore
+.venv/
+node_modules/
+.env
+.env.*
+local.settings.json
+credentials.json
+token.json
+*.pem
+*.key
+*.tfstate*
+*.tfplan
+.terraform/
+private*/
+captures/
+backups/
+batch.json
+reports/
+out/
+app-config.local.yaml
+```
 
-**Where:** the same workstation terminal.
+The source/file snippets are a starting implementation you type or paste into the named files. Replace `YOUR_*`, names, regions and addresses only with values from your own lab; do not place real client/employee records in a test project. Keep your terminal in this project root unless a step explicitly changes directory.
 
-1. Follow the runtime instructions and install only the dependencies selected by this project's files. Terraform provider downloads, optional browser downloads and scanner databases are separate prerequisites where the detailed guide identifies them.
-2. Run these source-derived baseline commands one at a time and stop on an unexpected failure. Read any skipped integration cases; a skip is not a successful live check.
+Before a first commit, set your own repository-local author with `git config user.name "YOUR_NAME"` and `git config user.email "YOUR_PUBLIC_COMMIT_EMAIL"`. Review `git status --short` and the staged diff before publishing; ignored local files are not a substitute for reviewing what you upload.
+
+## Step 1 — Create the module layout
+
+**Where:** Your blank project folder.
+
+Create modules/network and envs/lab directories. Keep reusable resource definitions in the module and environment selection/provider configuration in the root.
 
 ```bash
-python3 -B -m unittest discover -s scripts -p 'test_*.py' -v
+mkdir -p modules/network envs/lab
 ```
 
-**Expected result:** the selected tests finish without unexpected failures, and a demonstration command, where provided, produces fictional local decisions. These commands reproduce the included lab scope; they do not commission the live platform.
+**Check before continuing:** Your folder structure separates what gets built from where it gets built.
 
-The Python checks do not validate the Terraform modules. Before changing `infra`, install the Terraform version listed in [the command guide](COMMANDS.md), then run the separate module checks below. Initialization downloads providers from their registry (or needs a verified local cache); these tests use simulated responses, no live backend and no `apply`.
+## Step 2 — Write the reusable network module
+
+**Where:** modules/network/main.tf.
+
+Create the variables and resources below. Require the caller to supply name, region and address space rather than baking another organization's subscription into the module.
+
+Create **`modules/network/main.tf`** with the following contents:
+
+```hcl
+variable "name" {
+  type = string
+}
+variable "location" {
+  type = string
+}
+variable "address_space" {
+  type = list(string)
+}
+resource "azurerm_resource_group" "this" {
+  name = var.name
+  location = var.location
+}
+resource "azurerm_virtual_network" "this" {
+  name = "${var.name}-vnet"
+  location = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  address_space = var.address_space
+}
+output "vnet_id" {
+  value = azurerm_virtual_network.this.id
+}
+```
+
+**Check before continuing:** The module defines one group and VNet from its inputs.
+
+## Step 3 — Write your environment root
+
+**Where:** envs/lab/main.tf.
+
+Create the provider/root call below and substitute your own names and non-overlapping address range. Save the generated provider lockfile and keep state/plan files private.
+
+Create **`envs/lab/main.tf`** with the following contents:
+
+```hcl
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+  }
+}
+variable "subscription_id" {
+  type = string
+}
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id
+}
+module "network" {
+  source = "../../modules/network"
+  name = "rg-my-module-lab"
+  location = "eastus2"
+  address_space = ["10.70.0.0/16"]
+}
+```
+
+**Check before continuing:** The root calls your module through a local relative path.
+
+## Step 4 — Validate and review your own plan
+
+**Where:** Your project root.
+
+Initialize the environment root, format/validate, select your own subscription and save a plan. Read the planned resources before deciding whether to create the lab.
 
 ```bash
-terraform -chdir=infra init -backend=false -input=false
-terraform -chdir=infra validate
-terraform -chdir=infra test
+az login
+export TF_VAR_subscription_id="YOUR_SUBSCRIPTION_ID"
+terraform -chdir=envs/lab init
+terraform fmt -recursive
+terraform -chdir=envs/lab validate
+terraform -chdir=envs/lab plan -out=lab.tfplan
+terraform -chdir=envs/lab show lab.tfplan
 ```
 
-**Module checkpoint:** validation succeeds and the documented mock cases pass. A Python test result alone does not establish that the infrastructure configuration is valid.
+**Check before continuing:** You have a valid module call and a reviewed resource list.
 
-## Step 3: Make one project-specific change
+## Step 5 — Build and verify the dedicated lab
 
-**Where:** your editor, in your own local copy.
+**Where:** Your terminal and Azure Portal.
 
-1. Start with [`infra`](../infra) and the matching test or configuration instructions. Give a copied example its own names and ranges; preserve resource-address mapping and test that unrelated replacements are refused.
-2. Save your new case separately from the original acceptance records, then rerun the affected tests and the baseline. Do not edit recorded scanner results, screenshots or validation counts to manufacture a successful outcome.
-
-**Expected result:** you can explain what you changed, why the result changed and which negative case still fails safely. An unexpected failure means investigate the implementation or setup, not remove the failing check.
-
-## Step 4: Verify behavior and capture your own evidence
-
-**Where:** the test output, local viewer where supplied, and your private evidence folder.
-
-1. If the project supplies a viewer, use its startup command in [the command guide](COMMANDS.md); keep long-running preview servers in a separate terminal. Follow its exact loopback address and stop it with Ctrl+C when finished; for a command-line-only example, inspect its terminal output and generated files instead.
-2. Compare your own output with [the proof and limits](../README.md#proof-it-works), then record source version, command, expected result, observed result and unresolved work. Capture screenshots of your own fictional output rather than presenting the existing screenshots as your execution.
-
-**Expected result:** A module composition and mocked plan review, not a live state migration. Your evidence must say whether it covers local logic, a real tool run, a hosted service or a human observation.
-
-### Start the local preview
-
-Open a second terminal in the same repository root printed by `git rev-parse --show-toplevel`. Run the command below from that root, after the baseline has passed; it stays running while you use the preview.
+Apply only your reviewed saved plan, then inspect the resulting group/VNet and run another plan. The second plan should explain any drift; do not automatically apply a replacement because you changed a module address.
 
 ```bash
-python3 -B scripts/preview.py --port 8139
+terraform -chdir=envs/lab apply lab.tfplan
+terraform -chdir=envs/lab plan
 ```
 
-Open [http://127.0.0.1:8139](http://127.0.0.1:8139). Use the exact hostname shown here; a localhost address and a 127.0.0.1 address are not interchangeable for every project's host checks.
+**Check before continuing:** Your new resources exist and the follow-up plan has the expected outcome.
 
-The command uses the same Python environment as the baseline where Python is required. This guide uses an explicit virtual-environment executable rather than activating it; when following other project examples that say `python`, use that same executable if the project has a `.venv`. In WSL, keep the clone and its virtual environment in the same Linux environment; do not reuse a Windows `.venv`.
+## Step 6 — Explain safe adoption and cleanup
 
-Keep one preview per listening port. Stop your own earlier preview with Ctrl+C before starting another one on that port, or use only a port override documented by the project. If you stop the preview, rerun only its startup command; you do not need to rebuild or redeploy cloud services.
+**Where:** Your own state and documentation.
 
-## Step 5: Plan an independent cloud extension, if needed
+For an existing environment, compare resource IDs and review import/moved mappings separately; this new-build exercise does not migrate production state. For this lab, review a destroy plan in the same root and remove only its isolated resources.
 
-**Where:** your own architecture/configuration files first; a separately authorized lab subscription only later.
+**Check before continuing:** You distinguish module reuse, existing-state adoption and resource deletion.
 
-1. Read the implementation and infrastructure references linked below. Substitute your own names, identities, address ranges and service settings in an isolated environment; a public reference may contain only selected components and is not authority to apply someone else's production state.
-2. List the missing integrations and acceptance checks before deployment: runtime hosting, permissions, network/DNS paths, secrets, source data, notification or provider access as applicable. Keep disabled examples disabled until their specific dependencies, costs and cleanup are understood.
+## Verification and your own screenshots
 
-**Expected result:** a scoped extension plan with owners and explicit acceptance criteria, not a claim that the full service is deployed. No cloud `apply`, scanner targeting, paid operation or provider sign-in is implied by the local recipe.
+| Evidence | What to record | Your result |
+| --- | --- | --- |
+| New build | Your own files/resource settings and tool versions | Not yet recorded |
+| Working path | The actual successful request, configuration or recovery result | Not yet recorded |
+| Failure boundary | A meaningful denied, malformed, stale or failed case | Not yet recorded |
+| Recovery / cleanup | What you restored or removed and what remains billed | Not yet recorded |
 
-- [Implementation](IMPLEMENTATION.md)
-- [Operations And Scaling](OPERATIONS-AND-SCALING.md)
-- [Validation](VALIDATION.md)
-- [Source Map](SOURCE-MAP.md)
-- [Lessons Learned](LESSONS-LEARNED.md)
+Capture your own architecture/configuration, one working result and one failure/recovery result. Keep tokens, credentials, personal records and private identifiers out of public screenshots. Existing portfolio images are references, not evidence that you performed these steps.
 
-## Step 6: Troubleshoot, close out and explain what you built
+## Troubleshooting order
 
-**Where:** your project folder and the operating guide for any environment you actually created.
+1. Confirm the named file, working directory and selected tool/interpreter.
+2. Check the exact input and resource/account selected for the failing step.
+3. Separate identity permission, network/DNS reachability and application validation.
+4. Keep the actual error and reconcile an unknown write outcome before repeating it; do not widen access or repeat paid operations blindly.
 
-1. Check the failing stage in order: working directory and runtime, dependencies, test input, configuration, then any separately enabled service. Preserve the error and consult the existing troubleshooting lessons before widening permissions or changing the target.
-2. Stop only the viewers/containers you started, retain your useful evidence and remove only resources belonging to your own reviewed lab. A local-only run needs no cloud deletion; if you created cloud resources, verify residual storage/address/monitoring charges rather than assuming compute stop removes all cost.
+The numbered steps describe a build procedure. Local syntax checks, an accepted API request, a completed hosted operation and a human verification are different evidence levels; fill in the verification table with what you actually observed.
 
-**Finish checklist:** explain the business problem, show your own change and verification, describe one failure/recovery case, identify limitations and name the next owner action. Keep credentials and business records out of public commits and screenshots.
+## Official implementation references
+
+- [developer.hashicorp.com — develop](https://developer.hashicorp.com/terraform/language/modules/develop)
+- [developer.hashicorp.com — refactoring](https://developer.hashicorp.com/terraform/language/modules/develop/refactoring)
+
+The walkthrough layout follows the prerequisites → creation/configuration → test → verification → troubleshooting → cleanup pattern of the [Splunk project reference](https://github.com/davidharris6/splunk-siem-log-analysis). Its Splunk-specific settings are not copied into unrelated projects.
