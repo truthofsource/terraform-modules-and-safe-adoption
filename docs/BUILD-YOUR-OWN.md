@@ -1,6 +1,6 @@
 # Build your own: Reusable Terraform Modules and Safe Infrastructure Adoption
 
-This is a reader-operated build recipe for an independent learning copy. Follow the numbered steps in order and record your own results. The included local implementation is not a complete deployment of the private business platform; cloud extensions are separate and must use your own authorized resources.
+This is a step-by-step build guide for an independent learning copy. Follow the numbered steps in order and record your own results. The included local implementation is not a complete deployment of the private business platform; cloud extensions are separate and must use your own authorized resources.
 
 ## What you will create
 
@@ -45,6 +45,16 @@ python3 -B -m unittest discover -s scripts -p 'test_*.py' -v
 ```
 
 **Expected result:** the selected tests finish without unexpected failures, and a demonstration command, where provided, produces fictional local decisions. These commands reproduce the included lab scope; they do not commission the live platform.
+
+The Python checks do not validate the Terraform modules. Before changing `infra`, install the Terraform version listed in [the command guide](COMMANDS.md), then run the separate module checks below. Initialization downloads providers from their registry (or needs a verified local cache); these tests use simulated responses, no live backend and no `apply`.
+
+```bash
+terraform -chdir=infra init -backend=false -input=false
+terraform -chdir=infra validate
+terraform -chdir=infra test
+```
+
+**Module checkpoint:** validation succeeds and the documented mock cases pass. A Python test result alone does not establish that the infrastructure configuration is valid.
 
 ## Step 3: Make one project-specific change
 
