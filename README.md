@@ -1,10 +1,12 @@
 # Reusable Terraform Modules and Safe Infrastructure Adoption
 
+[![Terraform modules and adoption — illustrated overview](docs/diagrams/architecture.png)](docs/diagrams/architecture.svg)
+
+[View SVG](docs/diagrams/architecture.svg) · [Download PNG](docs/diagrams/architecture.png) · [Edit in draw.io](docs/diagrams/architecture.drawio)
+
 **Reuse cloud setup patterns without accidentally replacing the resources already in use.**
 
 [Business problem](#the-business-problem) · [Solution](#the-solution) · [Strengths](#engineering-strengths) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md) · [Step by step](#step-by-step)
-
-![Local implementation reference](docs/images/01-overview.png)
 
 ## The Business Problem
 
@@ -214,7 +216,7 @@ For an existing environment, compare resource IDs and review import/moved mappin
 | Failure boundary | A meaningful denied, malformed, stale or failed case | Not yet recorded |
 | Recovery / cleanup | What you restored or removed and what remains billed | Not yet recorded |
 
-Capture your own architecture/configuration, one working result and one failure/recovery result. Keep tokens, credentials, personal records and private identifiers out of public screenshots. Existing portfolio images are references, not evidence that you performed these steps.
+Capture your own architecture/configuration, one working result and one failure/recovery result. Keep tokens, credentials, personal records and private identifiers out of public screenshots. The architecture diagram explains the design; record your own results rather than treating it as execution evidence.
 
 ### Troubleshooting order
 
@@ -257,16 +259,7 @@ A short walkthrough of the process, with technical instructions and evidence lim
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  Inputs[Environment inputs / tags / identities] --> Root[Owning root and provider]
-  Root --> NP[Nonproduction module instances]
-  Root --> Prod[Production module instances]
-  NP --> Modules[Actual network / storage modules]
-  Prod --> Modules
-  Moves[Reviewed moved-address map] --> Adoption[Existing resource identity preserved]
-  Tests[Mocks / plan comparison] --> Adoption
-```
+[View the illustrated project overview](docs/diagrams/architecture.svg).
 
 This project is derived from actual workforce-platform implementation. Identifying labels/targets use examples. The local viewer and demonstration are new reference code; [source mapping](docs/SOURCE-MAP.md) identifies the copied/extracted files and limitations.
 
@@ -296,8 +289,6 @@ terraform -chdir=infra test
 
 ### 2. Inspect the decision output
 
-![Working reference example](docs/images/02-example.png)
-
 The output is explicitly fictional and exercises the included logic. A successful rule test or simulation is not a completed real-world operation. The public two-environment composition is a reference. Real environments retain their own roots/state and commissioned inputs; no live state or cloud resource was accessed.
 
 ### 3. Open the reference viewer
@@ -306,7 +297,7 @@ The output is explicitly fictional and exercises the included logic. A successfu
 python -B scripts/preview.py --port 8139
 ```
 
-Open [the local reference](http://127.0.0.1:8139). Switch between Overview, Working example and Implementation context. Ctrl+C stops it. Screenshots are genuine local captures, not hosted application/Azure Portal screenshots.
+Open [the local reference](http://127.0.0.1:8139). Switch between Overview, Working example and Implementation context. Ctrl+C stops it. Proper application and Azure screenshots are deferred; this remains a runnable local reference.
 
 ## Modules, State and Existing Resources
 
@@ -319,7 +310,6 @@ The recorded portal candidate showed two moved resources with no-op actions and 
 The same module definition does not mean production and nonproduction should share secrets, administrators or storage accounts. The reference passes explicit names/ranges/groups and reuses a fictional observation workspace only for mock composition. Real roots/providers/state remain separately owned.
 
 [HashiCorp modules overview](https://developer.hashicorp.com/terraform/language/modules) explains reuse; [module refactoring](https://developer.hashicorp.com/terraform/language/modules/develop/refactoring) covers address moves.
-
 
 ## Operations, Limits and Growth
 
