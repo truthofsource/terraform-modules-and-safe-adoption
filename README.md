@@ -35,6 +35,19 @@ Keep actual source-to-module moves separate from the public teaching root. Prese
 
 ## Step by Step
 
+Build an independent version with the [reader-operated walkthrough](docs/BUILD-YOUR-OWN.md). It gives prerequisites, working locations, numbered actions, source-derived commands, expected results, verification and cleanup.
+
+For this project, your working starting point is [`infra`](infra). Expected scope: A module composition and mocked plan review, not a live state migration.
+
+1. **Create your own workspace.** Copy the project and record the source version before editing.
+2. **Prepare and run the baseline.** Use the documented runtimes and selected dependencies, then run the local checks.
+3. **Make your own change.** Edit a project-specific fixture, configuration or rule and rerun its positive and negative cases.
+4. **Verify and document your result.** Capture your own evidence and distinguish a local example from a live integration.
+5. **Extend and close out deliberately.** Plan any independent cloud work separately and clean up only what you created.
+
+<details>
+<summary>How the underlying platform process works</summary>
+
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
 
 1. **Find the repeated setup pattern** — Identify infrastructure that uses the same structure across environments. Put that structure into a reusable Terraform module with explicit inputs.
@@ -44,6 +57,8 @@ A short walkthrough of the process, with technical instructions and evidence lim
 3. **Map existing resources carefully (Terraform moved blocks)** — Record how old resource addresses correspond to the new module addresses. Review the proposed plan for unintended replacements or unrelated changes.
 
 4. **Validate before a live migration (Terraform checks)** — Run the local examples and simulated infrastructure checks. This public project does not read or change the live infrastructure state.
+
+</details>
 
 ## Engineering Strengths
 
